@@ -2,17 +2,46 @@ body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
-.header, .container {
+.flex {
     display: flex;
     justify-content: center;
 }
 
-.matrix {
+.container {
+    margin: 0 10vw;
+}
+
+#matrix {
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
+#row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
 .cell {
-    width: 50px;
+    width: 70px;
     height: 50px;
+    font-size: large;
+    padding-left: 10px;
+}
+
+.options {
+    margin: 10px;
+}
+
+button {
+    width: 30px;
+    height: 30px;
+    margin: 2px;
+    font-weight: bold;
+    font-size: 20px;
 }

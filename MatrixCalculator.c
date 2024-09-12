@@ -158,9 +158,12 @@ int main()
 		// Divide a linha atual por ela mesmo para criar o pivô 1
 		double termToPivot = matrizFinal[row][row];
 
-		for (int j = 0; j < n + 1; j++)
+		if (termToPivot != 1)
 		{
-			matrizFinal[row][j] /= termToPivot;
+			for (int j = 0; j < n + 1; j++)
+			{
+				matrizFinal[row][j] /= termToPivot;
+			}
 		}
 
 		// Divide demais linhas pela linha do pivô
@@ -186,7 +189,7 @@ int main()
 	{
 		for (int j = 0; j < n + 1; j++)
 		{
-			printf("%.2lf ", matrizFinal[i][j]);
+			printf("%.2lf\t", matrizFinal[i][j]);
 		}
 		printf("\n");
 	}

@@ -4,11 +4,16 @@ body {
 
 .flex {
     display: flex;
+}
+
+.header {
     justify-content: center;
 }
 
 .container {
     margin: 0 10vw;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 #matrix {
@@ -35,7 +40,9 @@ body {
 }
 
 .options {
+    justify-content: center;
     margin: 10px;
+    width: 100%;
 }
 
 button {

@@ -25,8 +25,8 @@ function mountMatrix(d) {
                 equal.textContent = '=';
                 row.appendChild(equal);
             } else if (j <= d) {
+                
                 cell.placeholder = `X${j + 1}`;
-
             }
             
             row.appendChild(cell);
@@ -39,16 +39,24 @@ function mountMatrix(d) {
     container.appendChild(matrix)
 }
 
+function changeBackgroundColor () {
+    const r = dimension == 2 ? 255 : Math.floor(Math.random() * 256); 
+    const g = dimension == 2 ? 255 : Math.floor(Math.random() * 256);
+    const b = dimension == 2 ? 255 : Math.floor(Math.random() * 256);
+    document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+}
+
 function increase(){
     dimension++;
     mountMatrix(dimension);
+    changeBackgroundColor();
 }
 
 function decrease(){
     if (dimension - 1 > 1) {
-
         dimension--;
         mountMatrix(dimension);
+        changeBackgroundColor();
     }
 }
 

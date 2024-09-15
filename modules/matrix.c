@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<string.h>
-#include "matrix.h"
+#include "headers/matrix.h"
+#include "headers/array.h"
 
 double **allocateMatrixDouble(int m, int n) {
 
@@ -21,10 +22,7 @@ void printMatrixDouble(double **matrix, int m, int n) {
 
 void printMatrixChar(char **matrix, int m) {
     for (int i = 0; i < m; i++) {
-        int rowLen = strlen(matrix[i]);
-        for (int j = 0; j < rowLen; j++) {
-            printf("%c/t", matrix[i][j]);
-        }
+        printString(matrix[i]);
         printf("\n");
     }
 }

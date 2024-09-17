@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "../headers/matrix.h"
 #include "../headers/array.h"
 
@@ -37,14 +38,48 @@ double strtoDouble(char *str)
 
 double **allocateMatrixDouble(int m, int n)
 {
+    // Aloca memória para o array de ponteiros para as linhas
     double **matrix = (double **)malloc(m * sizeof(double *));
 
+    // Verifica se a alocação para o array de ponteiros foi bem-sucedida
+    if (matrix == NULL)
+    {
+        perror("Failed to allocate memory for row pointers");
+        exit(EXIT_FAILURE);
+    }
+
+    // Aloca memória para cada linha
     for (int i = 0; i < m; i++)
     {
         matrix[i] = (double *)malloc(n * sizeof(double));
+
+        // Verifica se a alocação para as colunas foi bem-sucedida
+        if (matrix[i] == NULL)
+        {
+            perror("Failed to allocate memory for columns");
+
+            // Libera a memória já alocada antes de sair
+            for (int j = 0; j < i; j++)
+            {
+                free(matrix[j]);
+            }
+            free(matrix);
+            exit(EXIT_FAILURE);
+        }
     }
 
     return matrix;
+}
+
+void freeMatrixDouble(double **matrix, int m)
+{
+    // Libera a memória de cada linha
+    for (int i = 0; i < m; i++)
+    {
+        free(matrix[i]);
+    }
+    // Libera o array de ponteiros para as linhas
+    free(matrix);
 }
 
 char **allocateMatrixChar(int m, int n)
@@ -129,23 +164,32 @@ double **scheduleMatrix(double **matrix, int m, int n)
         // Divide a linha atual por ela mesmo para criar o pivô 1
         double termToPivot = matrix[row][row];
 
-        if (termToPivot != 1)
+        if (termToPivot != 0)
         {
-            for (int j = 0; j < n; j++)
+            if (termToPivot != 1)
             {
-                matrix[row][j] /= termToPivot;
-            }
-        }
-
-        // Divide demais linhas pela linha do pivô
-        for (int i = 0; i < m; i++)
-        {
-            if (i != row)
-            {
-                double termo = matrix[i][col];
                 for (int j = 0; j < n; j++)
                 {
-                    matrix[i][j] -= termo * matrix[row][j];
+                    // Operador ternário apenas para remover sinal de negativo do zero
+                    matrix[row][j] = (matrix[row][j] / termToPivot != 0) ? matrix[row][j] / termToPivot : 0;
+                }
+            }
+
+            // Divide demais linhas pela linha do pivô
+            for (int i = 0; i < m; i++)
+            {
+                if (i != row)
+                {
+                    double termo = matrix[i][col];
+
+                    if (termo != 0)
+                    {
+                        for (int j = 0; j < n; j++)
+                        {
+                            // Operador ternário apenas para remover sinal de negativo do zero
+                            matrix[i][j] = (matrix[i][j] - (termo * matrix[row][j]) != 0) ? matrix[i][j] - (termo * matrix[row][j]) : 0;
+                        }
+                    }
                 }
             }
         }
@@ -226,4 +270,30 @@ double **systemToMatrix(char **system, int m)
         }
     }
     return matrix;
+}
+
+void classifyScheduledMatrix(double **matrix, int m, int n)
+{
+    // Valida se matriz escalonada representa um sistema impossível!
+    /**
+     * Verificando se em alguma linha todas as variáveis são 0 e o resultado não.
+     */
+    for (int i = 0; i < m; i++)
+    {
+        bool allVariablesZero = true;
+        for (int j = 0; j < n - 1; j++)
+        {
+            if (matrix[i][j] != 0)
+            {
+                allVariablesZero = false;
+                break;
+            }
+        }
+
+        if (allVariablesZero && matrix[i][n - 1] != 0)
+        {
+            printf("Sistema impossivel!\n");
+            return;
+        }
+    }
 }

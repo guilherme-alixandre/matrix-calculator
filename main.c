@@ -9,9 +9,9 @@ int main()
 
   char input[MAX_LENGTH];
 
-  printf("\nDigite as equacoes do sistema e aperte Enter 2x para enviar.\n");
+  printf("\n> Digite as equacoes do sistema e aperte Enter 2x para enviar.\n");
 
-  printf("\nExemplo:\n2x + 3y - 3z = 5\n3x - 4y + 3z = 8\n2x - 4y - 2z = 6\n\n");
+  printf("\n> Exemplo:\n2x + 3y - 3z = 5\n3x - 4y + 3z = 8\n2x - 4y - 2z = 6\n\n");
 
   /**
    * Guarda toda a entrada do sistema em um vetor já determinando a qnt de linhas
@@ -22,22 +22,31 @@ int main()
   {
     scanf("%c", &input[i]);
 
-    if (input[i] == '\n')
+    // Condicional para evitar problemas ao apertar enter antes de informar a entrada
+    if (i == 0 && input[0] == '\n')
     {
-      if (rowLen > biggerLen)
-        biggerLen = rowLen;
-      rowLen = 0;
-      if (i > 0 && input[i - 1] == '\n')
-      {
-        input[i] = '\0';
-        input[i - 1] = '\0';
-        break;
-      }
-      rows++;
+      input[0] = '\0';
+      i = -1;
     }
     else
     {
-      rowLen++;
+      if (input[i] == '\n')
+      {
+        if (rowLen > biggerLen)
+          biggerLen = rowLen;
+        rowLen = 0;
+        if (i > 0 && input[i - 1] == '\n')
+        {
+          input[i] = '\0';
+          input[i - 1] = '\0';
+          break;
+        }
+        rows++;
+      }
+      else
+      {
+        rowLen++;
+      }
     }
   }
 
@@ -64,13 +73,19 @@ int main()
   }
 
   double **matrix = systemToMatrix(system, rows);
-  printf("\nMatriz gerada a partir do sistema: \n");
+  printf("\n> Matriz gerada a partir do sistema: \n");
   printMatrixDouble(matrix, rows, rows + 1);
 
   double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
-  printf("\nMatriz escalonada:\n");
+  printf("\n> Matriz escalonada:\n");
   printMatrixDouble(scheduledMatrix, rows, rows + 1);
 
+  printf("\n> Classificacao do sistema: ");
+  classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
+
+  // Comentado pois está retornando Segmentation fault
+  // freeMatrixChar(system, rows);
+  // freeMatrixDouble(matrix, rows);
   getchar();
   return 0;
 }

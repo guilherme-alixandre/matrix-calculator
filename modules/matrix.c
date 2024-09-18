@@ -203,6 +203,7 @@ double **scheduleMatrix(double **matrix, int m, int n)
 
 int rankMatrix(double **matrix, int m, int n)
 {
+    // teste
 }
 
 double **systemToMatrix(char **system, int m)
@@ -318,7 +319,6 @@ double calcDeterminant(double **matrix, int m)
                 determinant -= matrix[i][i - i] * matrix[1 - i][1];
             }
         }
-        printf("%.2lf\n", determinant);
     }
     else
     {

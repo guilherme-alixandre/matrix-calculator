@@ -297,3 +297,60 @@ void classifyScheduledMatrix(double **matrix, int m, int n)
         }
     }
 }
+
+double calcDeterminant(double **matrix, int m)
+{
+    // Calculo do determinante.
+
+    int row = 0, columAdd = 0;
+    double determinant = 0;
+
+    if (m == 2)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            if (i <= 2 / 2 - 1)
+            {
+                determinant += matrix[i][i - i] * matrix[1 - i][1];
+            }
+            else
+            {
+                determinant -= matrix[i][i - i] * matrix[1 - i][1];
+            }
+        }
+        printf("%.2lf\n", determinant);
+    }
+    else
+    {
+        columAdd = 0;
+        double matrixExpand[3][5];
+        for (int i = 0; i < 3; i++)
+        {
+            columAdd = 0;
+            for (int j = 0; j < 5; j++)
+            {
+                if (j > 2)
+                {
+                    matrixExpand[i][j] = matrix[i][columAdd];
+                    columAdd++;
+                }
+                else
+                {
+                    matrixExpand[i][j] = matrix[i][j];
+                }
+            }
+        }
+        for (int j = 0; j < 6; j++)
+        {
+            if (j <= 6 / 2 - 1)
+            {
+                determinant += matrixExpand[0][j] * matrixExpand[1][j + 1] * matrixExpand[2][j + 2];
+            }
+            else
+            {
+                determinant -= matrixExpand[0][j - 1] * matrixExpand[1][j - 2] * matrixExpand[2][j - 3];
+            }
+        }
+    }
+    return determinant;
+}

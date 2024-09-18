@@ -11,5 +11,6 @@ void printMatrixDouble(double **matrix, int m, int n);
 void printMatrixChar(char **matrix, int m);
 void classifyScheduledMatrix(double **matrix, int m, int n);
 int rankMatrix(double **matrix, int m, int n);
+double calcDeterminant(double **matrix, int m);
 
 #endif

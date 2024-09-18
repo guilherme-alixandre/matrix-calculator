@@ -76,6 +76,9 @@ int main()
   printf("\n> Matriz gerada a partir do sistema: \n");
   printMatrixDouble(matrix, rows, rows + 1);
 
+  double determinant = calcDeterminant(matrix, rows);
+  printf("\n> Determinante: %.2lf\n", determinant);
+
   double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
   printf("\n> Matriz escalonada:\n");
   printMatrixDouble(scheduledMatrix, rows, rows + 1);

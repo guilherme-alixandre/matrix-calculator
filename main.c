@@ -9,9 +9,9 @@ int main()
 
   char input[MAX_LENGTH];
 
-  printf("\n> Digite as equacoes do sistema e aperte Enter 2x para enviar.\n");
+  printf("\n> Digite as equacoes do sistema e aperte Enter 2x para enviar.\nSe o valor da variavel for 1 ou 0, devera ser informado!\n");
 
-  printf("\n> Exemplo:\n2x + 3y - 3z = 5\n3x - 4y + 3z = 8\n2x - 4y - 2z = 6\n\n");
+  printf("\n> Exemplo:\n1x + 0y - 3z = 5\n3x - 4y + 0z = 8\n2x - 1y - 2z = 6\n\n");
 
   /**
    * Guarda toda a entrada do sistema em um vetor já determinando a qnt de linhas
@@ -77,14 +77,20 @@ int main()
   printMatrixDouble(matrix, rows, rows + 1);
 
   double determinant = calcDeterminant(matrix, rows);
+
   printf("\n> Determinante: %.2lf\n", determinant);
+
+  printf("\n> Transformacao representada pela matriz:\n");
+  classifyTransformation(matrix, rows);
 
   double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
   printf("\n> Matriz escalonada:\n");
   printMatrixDouble(scheduledMatrix, rows, rows + 1);
 
-  printf("\n> Classificacao do sistema: ");
   classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
+
+  int rank = rankMatrix(scheduledMatrix, rows, rows + 1);
+  printf("\n> Posto da matriz: %d\n", rank);
 
   // Comentado pois está retornando Segmentation fault
   // freeMatrixChar(system, rows);

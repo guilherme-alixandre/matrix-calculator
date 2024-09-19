@@ -203,7 +203,22 @@ double **scheduleMatrix(double **matrix, int m, int n)
 
 int rankMatrix(double **matrix, int m, int n)
 {
-    // teste
+    int rank = m;
+    for (int i = 0; i < m; i++)
+    {
+        bool isZero = true;
+        for (int j = 0; j < n; j++)
+        {
+            if (matrix[i][j] != 0)
+            {
+                isZero = false;
+            }
+        }
+
+        if (isZero)
+            rank--;
+    }
+    return rank;
 }
 
 double **systemToMatrix(char **system, int m)
@@ -293,6 +308,7 @@ void classifyScheduledMatrix(double **matrix, int m, int n)
 
         if (allVariablesZero && matrix[i][n - 1] != 0)
         {
+            printf("\n> Classificacao do sistema: \n");
             printf("Sistema impossivel!\n");
             return;
         }
@@ -353,4 +369,19 @@ double calcDeterminant(double **matrix, int m)
         }
     }
     return determinant;
+}
+
+void classifyTransformation(double **matrix, int m)
+{
+
+    double determinant = calcDeterminant(matrix, m);
+    double **scheduledMatrix = scheduleMatrix(matrix, m, m + 1);
+    int rank = rankMatrix(scheduledMatrix, m, m + 1);
+
+    if (determinant != 0 && rank == m)
+    {
+        printf("\034[31mA matriz representa uma transformacao sobrejetora!\034[0m\n");
+    }
+
+    // continuar
 }

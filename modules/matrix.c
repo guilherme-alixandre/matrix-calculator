@@ -373,14 +373,19 @@ double calcDeterminant(double **matrix, int m)
 
 void classifyTransformation(double **matrix, int m)
 {
-
+     // Matrizes N x N representam sempre imagens e dominios N x N, logo, ou atendem os requisitos para ser injetora e sobrejetora = bijetora
+     // ou não atendem nenhum, e assim são singulares.
     double determinant = calcDeterminant(matrix, m);
     double **scheduledMatrix = scheduleMatrix(matrix, m, m + 1);
     int rank = rankMatrix(scheduledMatrix, m, m + 1);
 
     if (determinant != 0 && rank == m)
     {
-        printf("\034[31mA matriz representa uma transformacao sobrejetora!\034[0m\n");
+        printf("A matriz e bijetora, pois seu determinate e diferente de 0!\n");
+    }
+    else if (determinant == 0 && rank < m)
+    {
+        printf("A matriz e singular, pois seu determinate e igual a 0!\n");
     }
 
     // continuar

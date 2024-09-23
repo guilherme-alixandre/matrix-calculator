@@ -13,5 +13,7 @@ void classifyScheduledMatrix(double **matrix, int m, int n);
 void classifyTransformation(double **matrix, int m);
 int rankMatrix(double **matrix, int m, int n);
 double calcDeterminant(double **matrix, int m);
+void baseVerification(int m, int n, int det, double **matrix);
+double **copyMatrix(double **matrix, int m, int n);
 
 #endif

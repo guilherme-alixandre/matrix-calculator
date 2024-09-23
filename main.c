@@ -77,12 +77,13 @@ int main()
   printMatrixDouble(matrix, rows, rows + 1);
 
   double determinant = calcDeterminant(matrix, rows);
-
   printf("\n> Determinante: %.2lf\n", determinant);
 
   printf("\n> Transformacao representada pela matriz:\n");
   classifyTransformation(matrix, rows);
 
+  baseVerification(rows, rows + 1, determinant, matrix);
+  
   double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
   printf("\n> Matriz escalonada:\n");
   printMatrixDouble(scheduledMatrix, rows, rows + 1);

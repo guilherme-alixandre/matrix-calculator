@@ -151,8 +151,25 @@ void printMatrixChar(char **matrix, int m)
     }
 }
 
+double **copyMatrix(double **matrix, int m, int n)
+{
+    // Aloca nova matriz
+    double **newMatrix = allocateMatrixDouble(m, n);
+
+    // Copia valores da matriz original para a nova
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            newMatrix[i][j] = matrix[i][j];
+        }
+    }
+    return newMatrix;
+}
+
 double **scheduleMatrix(double **matrix, int m, int n)
 {
+    double **scheduledMatrix = copyMatrix(matrix, m, n);
 
     // Escalonamento
     int row = 0;
@@ -162,7 +179,7 @@ double **scheduleMatrix(double **matrix, int m, int n)
         int col = row;
 
         // Divide a linha atual por ela mesmo para criar o pivô 1
-        double termToPivot = matrix[row][row];
+        double termToPivot = scheduledMatrix[row][row];
 
         if (termToPivot != 0)
         {
@@ -171,7 +188,7 @@ double **scheduleMatrix(double **matrix, int m, int n)
                 for (int j = 0; j < n; j++)
                 {
                     // Operador ternário apenas para remover sinal de negativo do zero
-                    matrix[row][j] = (matrix[row][j] / termToPivot != 0) ? matrix[row][j] / termToPivot : 0;
+                    scheduledMatrix[row][j] = (scheduledMatrix[row][j] / termToPivot != 0) ? scheduledMatrix[row][j] / termToPivot : 0;
                 }
             }
 
@@ -180,14 +197,14 @@ double **scheduleMatrix(double **matrix, int m, int n)
             {
                 if (i != row)
                 {
-                    double termo = matrix[i][col];
+                    double termo = scheduledMatrix[i][col];
 
                     if (termo != 0)
                     {
                         for (int j = 0; j < n; j++)
                         {
                             // Operador ternário apenas para remover sinal de negativo do zero
-                            matrix[i][j] = (matrix[i][j] - (termo * matrix[row][j]) != 0) ? matrix[i][j] - (termo * matrix[row][j]) : 0;
+                            scheduledMatrix[i][j] = (scheduledMatrix[i][j] - (termo * scheduledMatrix[row][j]) != 0) ? scheduledMatrix[i][j] - (termo * scheduledMatrix[row][j]) : 0;
                         }
                     }
                 }
@@ -198,7 +215,7 @@ double **scheduleMatrix(double **matrix, int m, int n)
 
     } while (row < m);
 
-    return matrix;
+    return scheduledMatrix;
 }
 
 int rankMatrix(double **matrix, int m, int n)
@@ -373,20 +390,44 @@ double calcDeterminant(double **matrix, int m)
 
 void classifyTransformation(double **matrix, int m)
 {
-     // Matrizes N x N representam sempre imagens e dominios N x N, logo, ou atendem os requisitos para ser injetora e sobrejetora = bijetora
-     // ou não atendem nenhum, e assim são singulares.
+    // Matrizes N x N representam sempre imagens e dominios N x N, logo, ou atendem os requisitos para ser injetora e sobrejetora = bijetora
+    // ou não atendem nenhum, e assim são singulares.
     double determinant = calcDeterminant(matrix, m);
     double **scheduledMatrix = scheduleMatrix(matrix, m, m + 1);
     int rank = rankMatrix(scheduledMatrix, m, m + 1);
 
     if (determinant != 0 && rank == m)
     {
-        printf("A matriz e bijetora, pois seu determinate e diferente de 0!\n");
+        printf("\nA matriz e bijetora, pois seu determinate e diferente de 0!\n");
     }
     else if (determinant == 0 && rank < m)
     {
-        printf("A matriz e singular, pois seu determinate e igual a 0!\n");
+        printf("\nA matriz e singular, pois seu determinate e igual a 0!\n");
     }
+}
 
-    // continuar
+void baseVerification(int m, int n, int det, double **matrix)
+{
+    double **scheMatrix = scheduleMatrix(matrix,m,n);
+    int rank = rankMatrix(scheMatrix,m,n);
+
+    if (rank == m && det != 0)
+    {
+        if (m == 3)
+        {
+            printf("\n>O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
+                   "\nConjunto: (%.0lf,%.0lf,%.0lf) // (%.0lf,%.0lf,%.0lf) // (%.0lf,%.0lf,%.0lf)\n",
+                   matrix[0][0], matrix[0][1], matrix[0][2],
+                   matrix[1][0], matrix[1][1], matrix[1][2],
+                   matrix[2][0], matrix[2][1], matrix[2][2]);
+        }
+        else if (m == 2)
+        {
+            printf("\n>O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
+                   "\nConjunto: (%.0lf,%.0lf) // (%.0lf,%.0lf)\n",
+                   matrix[0][0], matrix[0][1],
+                   matrix[1][0], matrix[1][1]);
+        }
+    }else
+        printf("\n>O sistema nao pode ser usado como base!\n");
 }

@@ -44,13 +44,14 @@ int main()
 
     } while (option < 1 || option > 5);
 
-    printf(YELLOW "\nOpcao selecionada:\n" RESET);
+    printf(GREEN "\nOpcao selecionada:\n" RESET);
     if (option == 1)
     {
-      printf(YELLOW "1 - Calculadora de Sistemas Lineares\n" RESET);
+      printf(GREEN "1 - Calculadora de Sistemas Lineares\n" RESET);
       printf("\nInstrucoes:\n");
-      printf("\n> Digite as equacoes do sistema e aperte Enter 2x para enviar.\nSe o valor da variavel for 1 ou 0, devera ser informado!\n");
-      printf("\n> Exemplo:\n1x + 0y - 3z = 5\n3x - 4y + 0z = 8\n2x - 1y - 2z = 6\n\n");
+      printf("\n> Digite cada equacao do sistema em uma linha e ao final aperte Enter mais 1x para enviar.\n");
+      printf(YELLOW "ATENÇÃO: Se o valor da variavel for 1 ou 0, devera ser informado!\n" RESET);
+      printf("\n> Exemplo:\n1x + 0y - 3z = 5\n3x - 4y + 0z = 8\n2x - 1y - 2z = 6\n\nSeu sistema:\n");
     }
     else if (option == 2)
     {
@@ -127,34 +128,47 @@ int main()
     }
 
     double **matrix = systemToMatrix(system, rows);
-    printf("\n> Matriz gerada a partir do sistema: \n");
+    printf(GREEN "\n> Matriz gerada a partir do sistema: \n" RESET);
     printMatrixDouble(matrix, rows, rows + 1);
 
     double determinant = calcDeterminant(matrix, rows);
-    printf("\n> Determinante: %.2lf\n", determinant);
+    printf(GREEN "\n> Determinante: " RESET);
+    printf("%.2lf\n", determinant);
 
-    printf("\n> Transformacao representada pela matriz:\n");
+    printf(GREEN "\n> Transformacao representada pela matriz:\n" RESET);
     classifyTransformation(matrix, rows);
 
     baseVerification(rows, rows + 1, determinant, matrix);
 
     double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
-    printf("\n> Matriz escalonada:\n");
+    printf(GREEN "\n> Matriz escalonada:\n" RESET);
     printMatrixDouble(scheduledMatrix, rows, rows + 1);
 
     classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
 
     int rank = rankMatrix(scheduledMatrix, rows, rows + 1);
-    printf("\n> Posto da matriz: %d\n", rank);
+    printf(GREEN "\n> Posto da matriz: %d\n" RESET, rank);
 
     // Comentado pois está retornando Segmentation fault
     // freeMatrixChar(system, rows);
     // freeMatrixDouble(matrix, rows);
-    getchar();
 
-    printf(GREEN "\nDeseja experimentar outra funcao do programa? (s/n)\n");
-    scanf("%c", &again);
-  } while (again == 's');
+    do
+    {
+      printf(GREEN "\nDeseja experimentar outra funcao do programa ou fazer outro teste nessa? (s/n)\n");
+      scanf("%c", &again);
 
+      if (again != 's' && again != 'S' && again != 'n' && again != 'N')
+      {
+        printf(RED "\nOpção inválida. Digite 's' ou 'n'!\n" RESET);
+        getchar();
+      }
+
+    } while (again != 's' && again != 'S' && again != 'n' && again != 'N');
+  } while (again == 's' || again == 'S');
+
+  printf(BLUE "\nPrograma finalizado. Obrigado por usar!\n" RESET);
+
+  getchar();
   return 0;
 }

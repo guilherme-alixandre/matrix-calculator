@@ -6,6 +6,16 @@
 #include "../headers/matrix.h"
 #include "../headers/array.h"
 
+// Definições de cores ANSI
+#define RESET "\x1b[0m"
+#define RED "\x1b[31m"
+#define GREEN "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN "\x1b[36m"
+#define WHITE "\x1b[37m"
+
 // enum e struct
 enum Dimensao
 {
@@ -325,11 +335,20 @@ void classifyScheduledMatrix(double **matrix, int m, int n)
 
         if (allVariablesZero && matrix[i][n - 1] != 0)
         {
-            printf("\n> Classificacao do sistema: \n");
-            printf("Sistema impossivel!\n");
+            printf(GREEN "\n> Classificacao do sistema: " RESET);
+            printf("(SI) Sistema impossivel!\n");
+            return;
+        }
+        else if (allVariablesZero && matrix[i][n - 1] == 0)
+        {
+            printf(GREEN "\n> Classificacao do sistema: " RESET);
+            printf("(SPI) Sistema possivel e indeterminado!\n");
             return;
         }
     }
+
+    printf(GREEN "\n> Classificacao do sistema: " RESET);
+    printf("(SPD) Sistema possivel e determinado!\n");
 }
 
 double calcDeterminant(double **matrix, int m)
@@ -408,8 +427,8 @@ void classifyTransformation(double **matrix, int m)
 
 void baseVerification(int m, int n, int det, double **matrix)
 {
-    double **scheMatrix = scheduleMatrix(matrix,m,n);
-    int rank = rankMatrix(scheMatrix,m,n);
+    double **scheMatrix = scheduleMatrix(matrix, m, n);
+    int rank = rankMatrix(scheMatrix, m, n);
 
     if (rank == m && det != 0)
     {
@@ -428,6 +447,7 @@ void baseVerification(int m, int n, int det, double **matrix)
                    matrix[0][0], matrix[0][1],
                    matrix[1][0], matrix[1][1]);
         }
-    }else
+    }
+    else
         printf("\n>O sistema nao pode ser usado como base!\n");
 }

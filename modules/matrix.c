@@ -417,11 +417,11 @@ void classifyTransformation(double **matrix, int m)
 
     if (determinant != 0 && rank == m)
     {
-        printf("\nA matriz e bijetora, pois seu determinate e diferente de 0!\n");
+        printf("A matriz e bijetora, pois e quadrada e seu determinate e diferente de 0!\n");
     }
     else if (determinant == 0 && rank < m)
     {
-        printf("\nA matriz e singular, pois seu determinate e igual a 0!\n");
+        printf("A matriz e singular (Nao representa transformacao linear), pois seu determinate e igual a 0!\n");
     }
 }
 
@@ -434,7 +434,8 @@ void baseVerification(int m, int n, int det, double **matrix)
     {
         if (m == 3)
         {
-            printf("\n>O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
+
+            printf("O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
                    "\nConjunto: (%.0lf,%.0lf,%.0lf) // (%.0lf,%.0lf,%.0lf) // (%.0lf,%.0lf,%.0lf)\n",
                    matrix[0][0], matrix[0][1], matrix[0][2],
                    matrix[1][0], matrix[1][1], matrix[1][2],
@@ -442,12 +443,14 @@ void baseVerification(int m, int n, int det, double **matrix)
         }
         else if (m == 2)
         {
-            printf("\n>O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
+            printf("O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
                    "\nConjunto: (%.0lf,%.0lf) // (%.0lf,%.0lf)\n",
                    matrix[0][0], matrix[0][1],
                    matrix[1][0], matrix[1][1]);
         }
     }
     else
-        printf("\n>O sistema nao pode ser usado como base!\n");
+    {
+        printf("O sistema informado nao contem um conjunto de vetores que pode ser usado como base!\n");
+    }
 }

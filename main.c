@@ -50,7 +50,7 @@ int main()
       printf(GREEN "1 - Calculadora de Sistemas Lineares\n" RESET);
       printf("\nInstrucoes:\n");
       printf("\n> Digite cada equacao do sistema em uma linha e ao final aperte Enter mais 1x para enviar.\n");
-      printf(YELLOW "ATENÇÃO: Se o valor da variavel for 1 ou 0, devera ser informado!\n" RESET);
+      printf(YELLOW "ATENÇÃO: Se o valor da variavel for 1 ou 0, devera ser informado!\nAs variaveis devem seguir a mesma ordem em todas as equações do sistema!" RESET);
       printf("\n> Exemplo:\n1x + 0y - 3z = 5\n3x - 4y + 0z = 8\n2x - 1y - 2z = 6\n\nSeu sistema:\n");
     }
     else if (option == 2)
@@ -135,9 +135,10 @@ int main()
     printf(GREEN "\n> Determinante: " RESET);
     printf("%.2lf\n", determinant);
 
-    printf(GREEN "\n> Transformacao representada pela matriz:\n" RESET);
+    printf(GREEN "\n> Transformacao representada pela matriz: " RESET);
     classifyTransformation(matrix, rows);
 
+    printf(GREEN "\n> Determinacao de bases: " RESET);
     baseVerification(rows, rows + 1, determinant, matrix);
 
     double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
@@ -147,7 +148,8 @@ int main()
     classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
 
     int rank = rankMatrix(scheduledMatrix, rows, rows + 1);
-    printf(GREEN "\n> Posto da matriz: %d\n" RESET, rank);
+    printf(GREEN "\n> Posto da matriz: " RESET);
+    printf("%d\n", rank);
 
     // Comentado pois está retornando Segmentation fault
     // freeMatrixChar(system, rows);

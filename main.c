@@ -147,6 +147,15 @@ int main()
     {
       printf(GREEN "\n> Matriz gerada a partir do sistema: \n" RESET);
       printMatrixDouble(matrix, rows, rows + 1);
+      double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
+      printf(GREEN "\n> Matriz escalonada:\n" RESET);
+      printMatrixDouble(scheduledMatrix, rows, rows + 1);
+
+      classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
+
+      int rank = rankMatrix(scheduledMatrix, rows, rows + 1);
+      printf(GREEN "\n> Posto da matriz: " RESET);
+      printf("%d\n", rank);
     }
 
     if (option == '1' || option == '2')
@@ -165,15 +174,12 @@ int main()
 
     if (option == '1' || option == '4' || option == '5')
     {
-      double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
-      printf(GREEN "\n> Matriz escalonada:\n" RESET);
-      printMatrixDouble(scheduledMatrix, rows, rows + 1);
+      double *autoValues = calcAutovalue(matrix, rows, rows);
+      printf(GREEN "\n> Autovalores:\n" RESET);
+      printf("\n A1: %.2lf, A2: %.2lf\n", autoValues[0],autoValues[1]);
+     
 
-      classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
-
-      int rank = rankMatrix(scheduledMatrix, rows, rows + 1);
-      printf(GREEN "\n> Posto da matriz: " RESET);
-      printf("%d\n", rank);
+      
     }
 
     // Comentado pois está retornando Segmentation fault

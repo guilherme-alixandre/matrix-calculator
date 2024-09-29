@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "../headers/array.h"
 
 void printString(char *arr)
@@ -33,4 +34,19 @@ int stringFindIndex(char *arr, char c)
             return i;
     }
     return -1;
+}
+
+double* allocateVetor(int tamanho) {
+    double* vetor = (double*)malloc(tamanho * sizeof(double));
+    if (vetor == NULL) {
+        printf("Erro: falha ao alocar memória.\n");
+        exit(1); // Encerrar o programa se a alocação falhar
+    }
+    
+    // Inicializar todos os elementos com zero
+    for (int i = 0; i < tamanho; i++) {
+        vetor[i] = 0.0;
+    }
+    
+    return vetor;
 }

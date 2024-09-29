@@ -454,3 +454,27 @@ void baseVerification(int m, int n, int det, double **matrix)
         printf("O conjunto de vetores que pode ser usado como base!\n");
     }
 }
+
+double *calcAutovalue(double **matrix, int m, int n){
+
+   if(m == 2){
+    double **matrixCop = copyMatrix(matrix, m, n);
+    double termB = 0, termC = 0;
+    double *autoValues = allocateVetor(2);
+
+    termB = (-matrixCop[0][0]) - (matrixCop[1][1]);
+    termC = calcDeterminant(matrix, m);
+
+    autoValues[0] = (-termB + sqrt((termB * termB) - 4 * termC)) / 2;
+    autoValues[1] = (-termB - sqrt((termB * termB) - 4 * termC)) / 2;
+
+    if(isnan(autoValues[0]) && isnan(autoValues[1])){
+        printf(RED"\nA matriz nao possui auto valores!\n"RESET);
+    }
+   } else if(m == 3){
+    
+   }
+
+    return autoValues;
+    
+}

@@ -9,7 +9,6 @@
 #define RED "\x1b[31m"
 #define GREEN "\x1b[32m"
 #define YELLOW "\x1b[33m"
-#define BLUE "\x1b[34m"
 #define MAGENTA "\x1b[35m"
 #define CYAN "\x1b[36m"
 #define WHITE "\x1b[37m"
@@ -26,44 +25,58 @@ int main()
     printf(GREEN "\n                        Trabalho de Algebra\n" RESET);
     printf(GREEN "\n************************************************************************\n" RESET);
 
-    int option = 0;
+    char option = '0';
     do
     {
 
       printf("\nSelecione uma das funcoes do programa:\n");
-      printf("\n1 - Calculadora de Sistemas Lineares");
-      printf("\n2 - Verificacao de injetividade, sobrejetividade e sobrejetividade");
+      printf("\n1 - Calculadora de Sistemas Lineares (Completo)");
+      printf("\n2 - Verificacao de injetividade, sobrejetividade e bijetividade");
       printf("\n3 - Determinacao de bases");
       printf("\n4 - Calculo de Autovalores e autovetores");
       printf("\n5 - Diagonalizacao de matrizes\n");
       printf("\nDigite o numero da opcao: ");
-      scanf("%d", &option);
+      scanf("%c", &option);
+      getchar();
 
-      if (option < 1 || option > 5)
+      if (option < '1' || option > '5')
+      {
         printf(RED "\nOpcao inexistente!\n" RESET);
+      }
 
-    } while (option < 1 || option > 5);
+    } while (option < '1' || option > '5');
 
     printf(GREEN "\nOpcao selecionada:\n" RESET);
-    if (option == 1)
+    if (option == '1')
     {
       printf(GREEN "1 - Calculadora de Sistemas Lineares\n" RESET);
       printf("\nInstrucoes:\n");
       printf("\n> Digite cada equacao do sistema em uma linha e ao final aperte Enter mais 1x para enviar.\n");
-      printf(YELLOW "ATENÇÃO: Se o valor da variavel for 1 ou 0, devera ser informado!\nAs variaveis devem seguir a mesma ordem em todas as equações do sistema!" RESET);
+      printf(YELLOW "ATENÇÃO: Se o valor da variavel for 1 ou 0, devera ser informado!\nAs variaveis devem seguir a mesma ordem em todas as equações do sistema!\nUse '.' para números decimais, ex.: 1.5!\n" RESET);
       printf("\n> Exemplo:\n1x + 0y - 3z = 5\n3x - 4y + 0z = 8\n2x - 1y - 2z = 6\n\nSeu sistema:\n");
     }
-    else if (option == 2)
+    else if (option == '2')
     {
+      printf(GREEN "2 - Verificacao de injetividade, sobrejetividade e bijetividade\n" RESET);
+      printf("\nInstruções:\n");
+      printf("\n> Digite cada linha da matriz separando os termos por virgula e ao final aperte Enter mais 1x para enviar.");
+      printf("\n> Exemplo:\n1, 2, 3\n4, 5, 6\n7, 8, 9\n\nSua matriz:\n");
     }
-    else if (option == 3)
+    else if (option == '3')
     {
+      printf(GREEN "3 - Determinacao de bases\n" RESET);
+      printf("\nInstruções:\n");
+      printf("\n> Digite cada vetor em uma linha separando os termos por virgula e ao final aperte Enter mais 1x para enviar.");
+      printf("\nNão é necessário colocar entre parenteses.");
+      printf("\n> Exemplo:\n1, 2, 3\n4, 5, 6\n7, 8, 9\n\nSeus vetores:\n");
     }
-    else if (option == 4)
+    else if (option == '4')
     {
+      printf(GREEN "4 - Calculo de Autovalores e autovetores\n" RESET);
     }
     else
     {
+      printf(GREEN "5 - Diagonalizacao de matrizes\n" RESET);
     }
 
     char input[MAX_LENGTH];
@@ -128,28 +141,40 @@ int main()
     }
 
     double **matrix = systemToMatrix(system, rows);
-    printf(GREEN "\n> Matriz gerada a partir do sistema: \n" RESET);
-    printMatrixDouble(matrix, rows, rows + 1);
-
     double determinant = calcDeterminant(matrix, rows);
-    printf(GREEN "\n> Determinante: " RESET);
-    printf("%.2lf\n", determinant);
 
-    printf(GREEN "\n> Transformacao representada pela matriz: " RESET);
-    classifyTransformation(matrix, rows);
+    if (option == '1')
+    {
+      printf(GREEN "\n> Matriz gerada a partir do sistema: \n" RESET);
+      printMatrixDouble(matrix, rows, rows + 1);
+    }
 
-    printf(GREEN "\n> Determinacao de bases: " RESET);
-    baseVerification(rows, rows + 1, determinant, matrix);
+    if (option == '1' || option == '2')
+    {
+      printf(GREEN "\n> Determinante: " RESET);
+      printf("%.2lf\n", determinant);
+      printf(GREEN "\n> Transformacao representada pela matriz: " RESET);
+      classifyTransformation(matrix, rows);
+    }
 
-    double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
-    printf(GREEN "\n> Matriz escalonada:\n" RESET);
-    printMatrixDouble(scheduledMatrix, rows, rows + 1);
+    if (option == '1' || option == '3')
+    {
+      printf(GREEN "\n> Determinacao de bases: " RESET);
+      baseVerification(rows, rows + 1, determinant, matrix);
+    }
 
-    classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
+    if (option == '1' || option == '4' || option == '5')
+    {
+      double **scheduledMatrix = scheduleMatrix(matrix, rows, rows + 1);
+      printf(GREEN "\n> Matriz escalonada:\n" RESET);
+      printMatrixDouble(scheduledMatrix, rows, rows + 1);
 
-    int rank = rankMatrix(scheduledMatrix, rows, rows + 1);
-    printf(GREEN "\n> Posto da matriz: " RESET);
-    printf("%d\n", rank);
+      classifyScheduledMatrix(scheduledMatrix, rows, rows + 1);
+
+      int rank = rankMatrix(scheduledMatrix, rows, rows + 1);
+      printf(GREEN "\n> Posto da matriz: " RESET);
+      printf("%d\n", rank);
+    }
 
     // Comentado pois está retornando Segmentation fault
     // freeMatrixChar(system, rows);
@@ -157,7 +182,7 @@ int main()
 
     do
     {
-      printf(GREEN "\nDeseja experimentar outra funcao do programa ou fazer outro teste nessa? (s/n)\n");
+      printf(CYAN "\nDeseja experimentar outra funcao do programa ou fazer outro teste nessa? (s/n)\n" RESET);
       scanf("%c", &again);
 
       if (again != 's' && again != 'S' && again != 'n' && again != 'N')
@@ -167,9 +192,10 @@ int main()
       }
 
     } while (again != 's' && again != 'S' && again != 'n' && again != 'N');
+    getchar();
   } while (again == 's' || again == 'S');
 
-  printf(BLUE "\nPrograma finalizado. Obrigado por usar!\n" RESET);
+  printf(CYAN "\nPrograma finalizado. Obrigado por usar!\n" RESET);
 
   getchar();
   return 0;

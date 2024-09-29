@@ -273,7 +273,7 @@ double **systemToMatrix(char **system, int m)
 
                 for (int x = j + 1; x < len; x++)
                 {
-                    if (isNumeric(system[i][x]))
+                    if (isNumeric(system[i][x]) || system[i][x] == '.')
                     {
                         number[charsInNumber] = system[i][x];
                         charsInNumber++;
@@ -297,7 +297,7 @@ double **systemToMatrix(char **system, int m)
                 number[0] = system[i][j];
                 for (int x = j + 1; x < len; x++)
                 {
-                    if (isNumeric(system[i][x]))
+                    if (isNumeric(system[i][x]) || system[i][x] == '.')
                     {
                         number[x - j] = system[i][x];
                     }
@@ -435,22 +435,22 @@ void baseVerification(int m, int n, int det, double **matrix)
         if (m == 3)
         {
 
-            printf("O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
-                   "\nConjunto: (%.0lf,%.0lf,%.0lf) // (%.0lf,%.0lf,%.0lf) // (%.0lf,%.0lf,%.0lf)\n",
+            printf("O conjunto de vetores que pode ser usados como base!\n"
+                   "\nBase: B = {(%.2lf, %.2lf, %.2lf), (%.2lf, %.2lf, %.2lf), (%.2lf, %.2lf, %.2lf)}\n",
                    matrix[0][0], matrix[0][1], matrix[0][2],
                    matrix[1][0], matrix[1][1], matrix[1][2],
                    matrix[2][0], matrix[2][1], matrix[2][2]);
         }
         else if (m == 2)
         {
-            printf("O sistema informado contem um conjunto de vetores que pode ser usados como base!\n"
-                   "\nConjunto: (%.0lf,%.0lf) // (%.0lf,%.0lf)\n",
+            printf("O conjunto de vetores que pode ser usados como base!\n"
+                   "\nBase: B = {(%.2lf, %.2lf), (%.2lf, %.2lf)}\n",
                    matrix[0][0], matrix[0][1],
                    matrix[1][0], matrix[1][1]);
         }
     }
     else
     {
-        printf("O sistema informado nao contem um conjunto de vetores que pode ser usado como base!\n");
+        printf("O conjunto de vetores que pode ser usado como base!\n");
     }
 }

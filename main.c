@@ -73,6 +73,9 @@ int main()
     else if (option == '4')
     {
       printf(GREEN "4 - Calculo de Autovalores e autovetores\n" RESET);
+      printf("\nInstruções:\n");
+      printf("\n> Digite cada linha da matriz separando os termos por virgula e ao final aperte Enter mais 1x para enviar.");
+      printf("\n> Exemplo:\n1, 2, 3\n4, 5, 6\n7, 8, 9\n\nSua matriz:\n");
     }
     else
     {

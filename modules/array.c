@@ -45,7 +45,7 @@ double* allocateVetor(int tamanho) {
     
     // Inicializar todos os elementos com zero
     for (int i = 0; i < tamanho; i++) {
-        vetor[i] = 0.0;
+        vetor[i] = '\0';
     }
     
     return vetor;

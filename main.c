@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <math.h>
 #include "headers/matrix.h"
 
 #define MAX_LENGTH 1024
@@ -179,7 +182,38 @@ int main()
     {
       double *autoValues = calcAutovalues(matrix, rows, rows);
       printf(GREEN "\n> Autovalores:\n" RESET);
-      printf("\n A1: %.2lf, A2: %.2lf\n", autoValues[0], autoValues[1]);
+      if (rows == 2)
+      {
+        if (isnan(autoValues[0]) && isnan(autoValues[1]))
+        {
+          printf(RED "\nA matriz nao possui auto valores!\n" RESET);
+        }
+        else
+          printf("\nOs auto valores sao:\n");
+        for (int i = 0; i < rows; i++)
+        {
+          if (!isnan(autoValues[i]))
+          {
+            printf("A%d = %.2lf\n", i + 1, autoValues[i]);
+          }
+        }
+      }
+      else if (rows == 3)
+      {
+        if (isnan(autoValues[0]) && isnan(autoValues[1]) && isnan(autoValues[2]))
+        {
+          printf(RED "\nA matriz nao possui auto valores!\n" RESET);
+        }
+        else
+          printf("\nOs auto valores sao:\n");
+        for (int i = 0; i < rows; i++)
+        {
+          if (!isnan(autoValues[i]))
+          {
+            printf("A%d = %.2lf\n", i + 1, autoValues[i]);
+          }
+        }
+      }
     }
 
     // Comentado pois está retornando Segmentation fault

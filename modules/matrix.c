@@ -458,11 +458,18 @@ void baseVerification(int m, int n, int det, double **matrix)
 double *calcAutovalues(double **matrix, int m, int n)
 {
 
+<<<<<<< HEAD
     if (m == 2)
     {
         double **matrixCop = copyMatrix(matrix, m, n);
         double termB = 0, termC = 0;
         double *autoValues = allocateVetor(2);
+=======
+   if(m == 2){
+        double *autoValues = allocateVetor(2);
+        double **matrixCop = copyMatrix(matrix, m, n);
+        double termB = 0, termC = 0;
+>>>>>>> 33a734add3d56688be21330e9aadcb7b7f9756c9
 
         termB = (-matrixCop[0][0]) - (matrixCop[1][1]);
         termC = calcDeterminant(matrix, m);
@@ -470,6 +477,7 @@ double *calcAutovalues(double **matrix, int m, int n)
         autoValues[0] = (-termB + sqrt((termB * termB) - 4 * termC)) / 2;
         autoValues[1] = (-termB - sqrt((termB * termB) - 4 * termC)) / 2;
 
+<<<<<<< HEAD
         if (isnan(autoValues[0]) && isnan(autoValues[1]))
         {
             printf(RED "\nA matriz nao possui auto valores!\n" RESET);
@@ -480,4 +488,43 @@ double *calcAutovalues(double **matrix, int m, int n)
     }
 
     return autoValues;
+=======
+        return autoValues;
+   } else if(m == 3){
+        double *autoValues = allocateVetor(3);
+        double **matrixCop = copyMatrix(matrix, m, n);
+        double a = 1; // Coeficiente de λ^3 (é sempre 1 para matriz 3x3)
+        double b, c, d;
+
+        // Cálculo dos coeficientes b, c, d a partir da matriz
+        b = - (matrixCop[0][0] + matrixCop[1][1] + matrixCop[2][2]);
+        c = matrixCop[0][0] * matrixCop[1][1] + matrixCop[1][1] * matrixCop[2][2] + matrixCop[2][2] * matrixCop[0][0]
+            - (matrixCop[0][1] * matrixCop[1][0] + matrixCop[1][2] * matrixCop[2][1] + matrixCop[2][0] * matrixCop[0][2]);
+        d = - (matrixCop[0][0] * (matrixCop[1][1] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][1]) 
+            + matrixCop[1][1] * (matrixCop[0][0] * matrixCop[2][2] - matrixCop[0][2] * matrixCop[2][0]) 
+            + matrixCop[2][2] * (matrixCop[0][0] * matrixCop[1][1] - matrixCop[0][1] * matrixCop[1][0]));
+
+        // Usando a fórmula de Cardano para resolver a equação cúbica
+        double q = (3 * c / a - (b * b) / (a * a)) / 9;
+        double r = (-27 * d / a + b * (9 * c / a - 2 * (b * b) / (a * a))) / 54;
+
+        double discriminante = q * q * q + r * r;
+
+        if (discriminante > 0) {
+            // Uma raiz real e duas complexas
+            double s = cbrt(r + sqrt(discriminante));
+            double t = cbrt(r - sqrt(discriminante));
+            autoValues[0] = s + t - b / (3 * a);
+            autoValues[1] = -(s + t) / 2 - b / (3 * a);
+            autoValues[2] = -(s + t) / 2 - b / (3 * a);
+        } else {
+            // Três raízes reais
+            double theta = acos(r / sqrt(-q * q * q));
+            autoValues[0] = 2 * sqrt(-q) * cos(theta / 3) - b / (3 * a);
+            autoValues[1] = 2 * sqrt(-q) * cos((theta + 2 * M_PI) / 3) - b / (3 * a);
+            autoValues[2] = 2 * sqrt(-q) * cos((theta + 4 * M_PI) / 3) - b / (3 * a);
+        }
+        return autoValues;
+    }
+>>>>>>> 33a734add3d56688be21330e9aadcb7b7f9756c9
 }

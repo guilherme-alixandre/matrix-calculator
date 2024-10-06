@@ -15,6 +15,6 @@ int rankMatrix(double **matrix, int m, int n);
 double calcDeterminant(double **matrix, int m);
 void baseVerification(int m, int n, int det, double **matrix);
 double **copyMatrix(double **matrix, int m, int n);
-double *calcAutovalue(double **matrix, int m, int n);
+double *calcAutovalues(double **matrix, int m, int n);
 
 #endif

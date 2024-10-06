@@ -177,12 +177,9 @@ int main()
 
     if (option == '1' || option == '4' || option == '5')
     {
-      double *autoValues = calcAutovalue(matrix, rows, rows);
+      double *autoValues = calcAutovalues(matrix, rows, rows);
       printf(GREEN "\n> Autovalores:\n" RESET);
-      printf("\n A1: %.2lf, A2: %.2lf\n", autoValues[0],autoValues[1]);
-     
-
-      
+      printf("\n A1: %.2lf, A2: %.2lf\n", autoValues[0], autoValues[1]);
     }
 
     // Comentado pois está retornando Segmentation fault

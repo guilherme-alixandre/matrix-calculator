@@ -78,11 +78,14 @@ int main()
       printf(GREEN "4 - Calculo de Autovalores e autovetores\n" RESET);
       printf("\nInstruções:\n");
       printf("\n> Digite cada linha da matriz separando os termos por virgula e ao final aperte Enter mais 1x para enviar.");
-      printf("\n> Exemplo:\n1, 2, 3\n4, 5, 6\n7, 8, 9\n\nSua matriz:\n");
+      printf("\n> Exemplo:\n4, 1\n2, 3\n\nSua matriz:\n");
     }
     else
     {
       printf(GREEN "5 - Diagonalizacao de matrizes\n" RESET);
+      printf("\nInstruções:\n");
+      printf("\n> Digite cada linha da matriz separando os termos por virgula e ao final aperte Enter mais 1x para enviar.");
+      printf("\n> Exemplo:\n4, 1\n2, 3\n\nSua matriz:\n");
     }
 
     char input[MAX_LENGTH];
@@ -125,6 +128,18 @@ int main()
     }
 
     char **system = allocateMatrixChar(rows, biggerLen);
+
+    char filename[] = "entradas.txt";
+
+    FILE *file = fopen(filename, "w");
+
+    if (file == NULL)
+    {
+      printf("Erro ao abrir o arquivo!\n");
+      return 1;
+    }
+
+    fprintf(file, "%s", input);
 
     /**
      * Guarda entrada no sistema
@@ -178,42 +193,53 @@ int main()
       baseVerification(rows, rows + 1, determinant, matrix);
     }
 
-    if (option == '1' || option == '4' || option == '5')
+    if (option == '1' || option == '4')
     {
       double *autoValues = calcAutovalues(matrix, rows, rows);
-      printf(GREEN "\n> Autovalores:\n" RESET);
+      printf(GREEN "\n> Autovalores:\n\n" RESET);
       if (rows == 2)
       {
         if (isnan(autoValues[0]) && isnan(autoValues[1]))
         {
-          printf(RED "\nA matriz nao possui auto valores!\n" RESET);
+          printf(RED "A matriz nao possui autovalores! (São números complexos)\n" RESET);
         }
         else
-          printf("\nOs auto valores sao:\n");
-        for (int i = 0; i < rows; i++)
         {
-          if (!isnan(autoValues[i]))
+
+          for (int i = 0; i < rows; i++)
           {
-            printf("A%d = %.2lf\n", i + 1, autoValues[i]);
+            if (!isnan(autoValues[i]))
+            {
+              printf("A%d = %.2lf\n", i + 1, autoValues[i]);
+            }
           }
+          calcAutovetors(matrix, rows, rows);
         }
       }
       else if (rows == 3)
       {
         if (isnan(autoValues[0]) && isnan(autoValues[1]) && isnan(autoValues[2]))
         {
-          printf(RED "\nA matriz nao possui auto valores!\n" RESET);
+          printf(RED "A matriz nao possui autovalores! (São números complexos)\n" RESET);
         }
         else
-          printf("\nOs auto valores sao:\n");
-        for (int i = 0; i < rows; i++)
         {
-          if (!isnan(autoValues[i]))
+
+          for (int i = 0; i < rows; i++)
           {
-            printf("A%d = %.2lf\n", i + 1, autoValues[i]);
+            if (!isnan(autoValues[i]))
+            {
+              printf("A%d = %.2lf\n", i + 1, autoValues[i]);
+            }
           }
+          calcAutovetors(matrix, rows, rows);
         }
       }
+    }
+
+    if (option == '1' || option == '5')
+    {
+      diagonalization(matrix, rows, rows);
     }
 
     // Comentado pois está retornando Segmentation fault

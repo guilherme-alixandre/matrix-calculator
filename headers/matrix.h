@@ -16,5 +16,7 @@ double calcDeterminant(double **matrix, int m);
 void baseVerification(int m, int n, int det, double **matrix);
 double **copyMatrix(double **matrix, int m, int n);
 double *calcAutovalues(double **matrix, int m, int n);
+void calcAutovetors(double **matrix, int m, int n);
+void diagonalization(double **matrix, int m, int n);
 
 #endif

@@ -335,17 +335,34 @@ void classifyScheduledMatrix(double **matrix, int m, int n)
 
         if (allVariablesZero && matrix[i][n - 1] != 0)
         {
+
             printf(GREEN "\n> Classificacao do sistema: " RESET);
             printf("(SI) Sistema impossivel!\n");
+
             return;
         }
         else if (allVariablesZero && matrix[i][n - 1] == 0)
         {
+
+            if (m == 2)
+            {
+                char signal = matrix[0][1] < 0 ? '+' : '-';
+                printf("\nx1 = %.2lf %c %.2lfx2", matrix[0][2], signal, matrix[0][1]);
+            }
+            printf("\n");
+
             printf(GREEN "\n> Classificacao do sistema: " RESET);
             printf("(SPI) Sistema possivel e indeterminado!\n");
             return;
         }
     }
+
+    for (int i = 0; i < m; i++)
+    {
+        printf("\nx%d = %.2lf", i + 1, matrix[i][m]);
+    }
+
+    printf("\n");
 
     printf(GREEN "\n> Classificacao do sistema: " RESET);
     printf("(SPD) Sistema possivel e determinado!\n");
@@ -451,25 +468,18 @@ void baseVerification(int m, int n, int det, double **matrix)
     }
     else
     {
-        printf("O conjunto de vetores que pode ser usado como base!\n");
+        printf("O conjunto de vetores não pode ser usado como base!\n");
     }
 }
 
 double *calcAutovalues(double **matrix, int m, int n)
 {
 
-<<<<<<< HEAD
     if (m == 2)
     {
-        double **matrixCop = copyMatrix(matrix, m, n);
-        double termB = 0, termC = 0;
-        double *autoValues = allocateVetor(2);
-=======
-   if(m == 2){
         double *autoValues = allocateVetor(2);
         double **matrixCop = copyMatrix(matrix, m, n);
         double termB = 0, termC = 0;
->>>>>>> 33a734add3d56688be21330e9aadcb7b7f9756c9
 
         termB = (-matrixCop[0][0]) - (matrixCop[1][1]);
         termC = calcDeterminant(matrix, m);
@@ -477,32 +487,19 @@ double *calcAutovalues(double **matrix, int m, int n)
         autoValues[0] = (-termB + sqrt((termB * termB) - 4 * termC)) / 2;
         autoValues[1] = (-termB - sqrt((termB * termB) - 4 * termC)) / 2;
 
-<<<<<<< HEAD
-        if (isnan(autoValues[0]) && isnan(autoValues[1]))
-        {
-            printf(RED "\nA matriz nao possui auto valores!\n" RESET);
-        }
+        return autoValues;
     }
     else if (m == 3)
     {
-    }
-
-    return autoValues;
-=======
-        return autoValues;
-   } else if(m == 3){
         double *autoValues = allocateVetor(3);
         double **matrixCop = copyMatrix(matrix, m, n);
         double a = 1; // Coeficiente de λ^3 (é sempre 1 para matriz 3x3)
         double b, c, d;
 
         // Cálculo dos coeficientes b, c, d a partir da matriz
-        b = - (matrixCop[0][0] + matrixCop[1][1] + matrixCop[2][2]);
-        c = matrixCop[0][0] * matrixCop[1][1] + matrixCop[1][1] * matrixCop[2][2] + matrixCop[2][2] * matrixCop[0][0]
-            - (matrixCop[0][1] * matrixCop[1][0] + matrixCop[1][2] * matrixCop[2][1] + matrixCop[2][0] * matrixCop[0][2]);
-        d = - (matrixCop[0][0] * (matrixCop[1][1] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][1]) 
-            + matrixCop[1][1] * (matrixCop[0][0] * matrixCop[2][2] - matrixCop[0][2] * matrixCop[2][0]) 
-            + matrixCop[2][2] * (matrixCop[0][0] * matrixCop[1][1] - matrixCop[0][1] * matrixCop[1][0]));
+        b = -(matrixCop[0][0] + matrixCop[1][1] + matrixCop[2][2]);
+        c = matrixCop[0][0] * matrixCop[1][1] + matrixCop[1][1] * matrixCop[2][2] + matrixCop[2][2] * matrixCop[0][0] - (matrixCop[0][1] * matrixCop[1][0] + matrixCop[1][2] * matrixCop[2][1] + matrixCop[2][0] * matrixCop[0][2]);
+        d = -(matrixCop[0][0] * (matrixCop[1][1] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][1]) + matrixCop[1][1] * (matrixCop[0][0] * matrixCop[2][2] - matrixCop[0][2] * matrixCop[2][0]) + matrixCop[2][2] * (matrixCop[0][0] * matrixCop[1][1] - matrixCop[0][1] * matrixCop[1][0]));
 
         // Usando a fórmula de Cardano para resolver a equação cúbica
         double q = (3 * c / a - (b * b) / (a * a)) / 9;
@@ -510,14 +507,17 @@ double *calcAutovalues(double **matrix, int m, int n)
 
         double discriminante = q * q * q + r * r;
 
-        if (discriminante > 0) {
+        if (discriminante > 0)
+        {
             // Uma raiz real e duas complexas
             double s = cbrt(r + sqrt(discriminante));
             double t = cbrt(r - sqrt(discriminante));
             autoValues[0] = s + t - b / (3 * a);
             autoValues[1] = -(s + t) / 2 - b / (3 * a);
             autoValues[2] = -(s + t) / 2 - b / (3 * a);
-        } else {
+        }
+        else
+        {
             // Três raízes reais
             double theta = acos(r / sqrt(-q * q * q));
             autoValues[0] = 2 * sqrt(-q) * cos(theta / 3) - b / (3 * a);
@@ -526,5 +526,56 @@ double *calcAutovalues(double **matrix, int m, int n)
         }
         return autoValues;
     }
->>>>>>> 33a734add3d56688be21330e9aadcb7b7f9756c9
+}
+
+void calcAutovetors(double **matrix, int m, int n)
+{
+    double *autoValues = calcAutovalues(matrix, m, n);
+
+    if (m == 2)
+    {
+        printf(GREEN "\n> Autovetores:\n" RESET);
+        for (int a = 0; a < 2; a++)
+        {
+            double **matrixCop = copyMatrix(matrix, m, n);
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == j)
+                    {
+                        matrixCop[i][j] -= autoValues[a];
+                    }
+                }
+            }
+
+            double **scheduledMatriz = scheduleMatrix(matrixCop, m, m + 1);
+
+            printf("\nv1 = (1.00, %.2lf)", -scheduledMatriz[0][0] / scheduledMatriz[0][1]);
+        }
+
+        printf("\n");
+    }
+    else
+    {
+        printf("\nFunção de cálculo de autovetores de matrizes 3x3 não concluida!\n");
+    }
+}
+
+void diagonalization(double **matrix, int m, int n)
+{
+
+    double *autoValues = calcAutovalues(matrix, m, n);
+    double **matrixCop = copyMatrix(matrix, m, n);
+
+    if (m == 2)
+    {
+        printf(GREEN "\n\n> Matriz diagonalizada:\n" RESET);
+        printf("\n%.2lf 0.00", autoValues[0]);
+        printf("\n0.00 %.2lf\n", autoValues[1]);
+    }
+    else
+    {
+        printf("\nFunção de diagonalização de matrizes 3x3 não concluída!\n");
+    }
 }

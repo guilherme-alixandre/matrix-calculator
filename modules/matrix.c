@@ -489,41 +489,53 @@ double *calcAutovalues(double **matrix, int m, int n)
 
         return autoValues;
     }
+    // Essa função custou bastante tempo, mas ainda sim, não conseguimos faze-la funcionar de forma correta.
     else if (m == 3)
     {
         double *autoValues = allocateVetor(3);
         double **matrixCop = copyMatrix(matrix, m, n);
-        double a = 1; // Coeficiente de λ^3 (é sempre 1 para matriz 3x3)
-        double b, c, d;
+        // Passo 1: Calcule os coeficientes do polinômio característico
+        double termB = -(matrixCop[0][0] + matrixCop[1][1] + matrixCop[2][2]);
+        double termC = matrixCop[0][0] * matrixCop[1][1] + matrixCop[0][0] * matrixCop[2][2] + matrixCop[1][1] * matrixCop[2][2] - 
+                    (matrixCop[0][1] * matrixCop[1][0] + matrixCop[0][2] * matrixCop[2][0] + matrixCop[1][2] * matrixCop[2][1]);
+        double termD = -(matrixCop[0][0] * (matrixCop[1][1] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][1]) -
+                        matrixCop[0][1] * (matrixCop[1][0] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][0]) +
+                        matrixCop[0][2] * (matrixCop[1][0] * matrixCop[2][1] - matrixCop[1][1] * matrixCop[2][0]));
 
-        // Cálculo dos coeficientes b, c, d a partir da matriz
-        b = -(matrixCop[0][0] + matrixCop[1][1] + matrixCop[2][2]);
-        c = matrixCop[0][0] * matrixCop[1][1] + matrixCop[1][1] * matrixCop[2][2] + matrixCop[2][2] * matrixCop[0][0] - (matrixCop[0][1] * matrixCop[1][0] + matrixCop[1][2] * matrixCop[2][1] + matrixCop[2][0] * matrixCop[0][2]);
-        d = -(matrixCop[0][0] * (matrixCop[1][1] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][1]) + matrixCop[1][1] * (matrixCop[0][0] * matrixCop[2][2] - matrixCop[0][2] * matrixCop[2][0]) + matrixCop[2][2] * (matrixCop[0][0] * matrixCop[1][1] - matrixCop[0][1] * matrixCop[1][0]));
+        // Passo 2: Eliminar o termo quadrático e calcular os valores P e Q
+        double p = termB / -1; // Normalizado em relação a -1
+        double q = termC / -1; // Normalizado em relação a -1
+        double r = termD / -1; // Normalizado em relação a -1
 
-        // Usando a fórmula de Cardano para resolver a equação cúbica
-        double q = (3 * c / a - (b * b) / (a * a)) / 9;
-        double r = (-27 * d / a + b * (9 * c / a - 2 * (b * b) / (a * a))) / 54;
+        double P = q - (p * p) / 3;
+        double Q = 2 * pow(p / 3, 3) - (p * q) / 3 + r;
 
-        double discriminante = q * q * q + r * r;
+        // Passo 3: Calcule o discriminante
+        double discriminante = pow(Q / 2, 2) + pow(P / 3, 3);
 
-        if (discriminante > 0)
-        {
-            // Uma raiz real e duas complexas
-            double s = cbrt(r + sqrt(discriminante));
-            double t = cbrt(r - sqrt(discriminante));
-            autoValues[0] = s + t - b / (3 * a);
-            autoValues[1] = -(s + t) / 2 - b / (3 * a);
-            autoValues[2] = -(s + t) / 2 - b / (3 * a);
+        // Passo 4: Resolva a equação cúbica com base no valor do discriminante
+        if (discriminante > 0) {
+            // Uma raiz real e duas raízes complexas
+            double S1 = cbrt(-Q / 2 + sqrt(discriminante));
+            double S2 = cbrt(-Q / 2 - sqrt(discriminante));
+            autoValues[0] = S1 + S2 - p / 3;
+            autoValues[1] = NAN; // Raízes complexas
+            autoValues[2] = NAN;
+        } else if (discriminante == 0) {
+            // Todas as raízes são reais e pelo menos duas são iguais
+            double S = cbrt(-Q / 2);
+            autoValues[0] = 2 * S - p / 3;
+            autoValues[1] = -S - p / 3;
+            autoValues[2] = -S - p / 3;
+        } else {
+            // Todas as raízes são reais e distintas
+            double r1 = 2 * sqrt(-P / 3);
+            double theta = acos(-Q / (2 * sqrt(-pow(P / 3, 3))));
+            autoValues[0] = r1 * cos(theta / 3) - p / 3;
+            autoValues[1] = r1 * cos((theta + 2 * M_PI) / 3) - p / 3;
+            autoValues[2] = r1 * cos((theta + 4 * M_PI) / 3) - p / 3;
         }
-        else
-        {
-            // Três raízes reais
-            double theta = acos(r / sqrt(-q * q * q));
-            autoValues[0] = 2 * sqrt(-q) * cos(theta / 3) - b / (3 * a);
-            autoValues[1] = 2 * sqrt(-q) * cos((theta + 2 * M_PI) / 3) - b / (3 * a);
-            autoValues[2] = 2 * sqrt(-q) * cos((theta + 4 * M_PI) / 3) - b / (3 * a);
-        }
+        printf("\nFuncao de calculo de autovalores de matrizes 3x3 nao concluida!\n");
         return autoValues;
     }
 }
@@ -558,7 +570,7 @@ void calcAutovetors(double **matrix, int m, int n)
     }
     else
     {
-        printf("\nFunção de cálculo de autovetores de matrizes 3x3 não concluida!\n");
+        printf("\nFuncao de calculo de autovetores de matrizes 3x3 nao concluida!\n");
     }
 }
 
@@ -576,6 +588,6 @@ void diagonalization(double **matrix, int m, int n)
     }
     else
     {
-        printf("\nFunção de diagonalização de matrizes 3x3 não concluída!\n");
+        printf("\nFuno de diagonalizacao de matrizes 3x3 não concluada!\n");
     }
 }

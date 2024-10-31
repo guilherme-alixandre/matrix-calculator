@@ -494,48 +494,45 @@ double *calcAutovalues(double **matrix, int m, int n)
     {
         double *autoValues = allocateVetor(3);
         double **matrixCop = copyMatrix(matrix, m, n);
-        // Passo 1: Calcule os coeficientes do polinômio característico
-        double termB = -(matrixCop[0][0] + matrixCop[1][1] + matrixCop[2][2]);
-        double termC = matrixCop[0][0] * matrixCop[1][1] + matrixCop[0][0] * matrixCop[2][2] + matrixCop[1][1] * matrixCop[2][2] - 
-                    (matrixCop[0][1] * matrixCop[1][0] + matrixCop[0][2] * matrixCop[2][0] + matrixCop[1][2] * matrixCop[2][1]);
-        double termD = -(matrixCop[0][0] * (matrixCop[1][1] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][1]) -
-                        matrixCop[0][1] * (matrixCop[1][0] * matrixCop[2][2] - matrixCop[1][2] * matrixCop[2][0]) +
-                        matrixCop[0][2] * (matrixCop[1][0] * matrixCop[2][1] - matrixCop[1][1] * matrixCop[2][0]));
+        double termB, termC, termD;
 
-        // Passo 2: Eliminar o termo quadrático e calcular os valores P e Q
-        double p = termB / -1; // Normalizado em relação a -1
-        double q = termC / -1; // Normalizado em relação a -1
-        double r = termD / -1; // Normalizado em relação a -1
+        // Calculando os termos do polinômio característico
+        termB = -(matrixCop[0][0] + matrixCop[1][1] + matrixCop[2][2]);
+        termC = matrixCop[0][0] * matrixCop[1][1] + matrixCop[0][0] * matrixCop[2][2] + matrixCop[1][1] * matrixCop[2][2] - matrixCop[0][1] * matrixCop[1][0] - matrixCop[0][2] * matrixCop[2][0] - matrixCop[1][2] * matrixCop[2][1];
+        termD = -calcDeterminant(matrixCop, m);
 
-        double P = q - (p * p) / 3;
-        double Q = 2 * pow(p / 3, 3) - (p * q) / 3 + r;
+        // Eliminando o termo quadrático
+        double P = termC - (termB * termB) / 3;
+        double Q = termD + (2 * termB * termB * termB) / 27 - (termB * termC) / 3;
 
-        // Passo 3: Calcule o discriminante
-        double discriminante = pow(Q / 2, 2) + pow(P / 3, 3);
+        // Calculando o discriminante
+        double D = (Q / 2) * (Q / 2) + (P / 3) * (P / 3) * (P / 3);
 
-        // Passo 4: Resolva a equação cúbica com base no valor do discriminante
-        if (discriminante > 0) {
-            // Uma raiz real e duas raízes complexas
-            double S1 = cbrt(-Q / 2 + sqrt(discriminante));
-            double S2 = cbrt(-Q / 2 - sqrt(discriminante));
-            autoValues[0] = S1 + S2 - p / 3;
-            autoValues[1] = NAN; // Raízes complexas
+        if (D > 0)
+        {
+            // Uma raiz real e duas complexas
+            double y1 = cbrt(-Q / 2 + sqrt(D)) + cbrt(-Q / 2 - sqrt(D));
+            autoValues[0] = y1 - termB / 3;
+            autoValues[1] = NAN;
             autoValues[2] = NAN;
-        } else if (discriminante == 0) {
-            // Todas as raízes são reais e pelo menos duas são iguais
-            double S = cbrt(-Q / 2);
-            autoValues[0] = 2 * S - p / 3;
-            autoValues[1] = -S - p / 3;
-            autoValues[2] = -S - p / 3;
-        } else {
-            // Todas as raízes são reais e distintas
-            double r1 = 2 * sqrt(-P / 3);
-            double theta = acos(-Q / (2 * sqrt(-pow(P / 3, 3))));
-            autoValues[0] = r1 * cos(theta / 3) - p / 3;
-            autoValues[1] = r1 * cos((theta + 2 * M_PI) / 3) - p / 3;
-            autoValues[2] = r1 * cos((theta + 4 * M_PI) / 3) - p / 3;
         }
-        printf("\nFuncao de calculo de autovalores de matrizes 3x3 nao concluida!\n");
+        else if (D == 0)
+        {
+            // Todas as raízes reais e pelo menos duas são iguais
+            double y1 = cbrt(-Q / 2);
+            autoValues[0] = 2 * y1 - termB / 3;
+            autoValues[1] = -y1 - termB / 3;
+            autoValues[2] = -y1 - termB / 3;
+        }
+        else
+        {
+            // Todas as raízes são reais e distintas
+            double r = sqrt(-P / 3);
+            double phi = acos(-Q / (2 * r * r * r));
+            autoValues[0] = 2 * r * cos(phi / 3) - termB / 3;
+            autoValues[1] = 2 * r * cos((phi + 2 * M_PI) / 3) - termB / 3;
+            autoValues[2] = 2 * r * cos((phi + 4 * M_PI) / 3) - termB / 3;
+        }
         return autoValues;
     }
 }
@@ -563,14 +560,40 @@ void calcAutovetors(double **matrix, int m, int n)
 
             double **scheduledMatriz = scheduleMatrix(matrixCop, m, m + 1);
 
-            printf("\nv1 = (1.00, %.2lf)", -scheduledMatriz[0][0] / scheduledMatriz[0][1]);
+            printf("\nv%d = (1.00, %.2lf)", a + 1, -scheduledMatriz[0][0] / scheduledMatriz[0][1]);
         }
 
         printf("\n");
     }
     else
     {
-        printf("\nFuncao de calculo de autovetores de matrizes 3x3 nao concluida!\n");
+
+        printf(GREEN "\n> Autovetores:\n" RESET);
+        for (int a = 0; a < 3; a++)
+        {
+            double **matrixCop = copyMatrix(matrix, m, n);
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == j)
+                    {
+                        matrixCop[i][j] -= autoValues[a];
+                    }
+                }
+            }
+
+            double **scheduledMatriz = scheduleMatrix(matrixCop, m, m + 1);
+
+            // Encontrar e imprimir o autovetor correspondente, com normalização (se necessário)
+            double x = 1.0; // Convenção comum para iniciar um vetor base
+            double y = -scheduledMatriz[0][2] / scheduledMatriz[0][1];
+            double z = -scheduledMatriz[1][2] / scheduledMatriz[1][1];
+
+            printf("\nv%d = (%.2lf, %.2lf, %.2lf)\n", a + 1, x, y, z);
+        }
+
+        printf("\n");
     }
 }
 
@@ -588,6 +611,9 @@ void diagonalization(double **matrix, int m, int n)
     }
     else
     {
-        printf("\nFuno de diagonalizacao de matrizes 3x3 não concluada!\n");
+        printf(GREEN "\n\n> Matriz diagonalizada:\n" RESET);
+        printf("\n%.2lf 0.00 0.00", autoValues[0]);
+        printf("\n0.00 %.2lf 0.00\n", autoValues[1]);
+        printf("\n0.00 0.00 %.2lf\n", autoValues[2]);
     }
 }

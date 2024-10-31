@@ -140,6 +140,7 @@ int main()
     }
 
     fprintf(file, "%s", input);
+    fclose(file);
 
     /**
      * Guarda entrada no sistema
